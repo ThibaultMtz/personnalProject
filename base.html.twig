@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>{% block title %}Watooshop{% endblock %}</title>
+
+        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,line-clamp"></script>
+
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" />
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tw-elements/dist/css/index.min.css" />
+
+        {#swipe homepage#}
+        <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+        <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+
+        {% block stylesheets %}
+            {{ encore_entry_link_tags('app') }}
+        {% endblock %}
+
+        {% block javascripts %}
+            {{ encore_entry_script_tags('app') }}
+        {% endblock %}
+    </head>
+
+    <body>
+        <header class="sticky top-0 z-50 bg-white shadow-sm">
+            <!-- header navigation -->
+            <div class="container mx-auto px-4 py-2 flex items-center">
+                <!-- logo -->
+                <div class="mr-auto md:w-48 flex-shrink-0">
+                    <a class="text-2xl font-bold text-blue-600 transition-colors duration-300 transform dark:text-white lg:text-3xl hover:text-gray-700 dark:hover:text-gray-300" href="{{ path('app_accueil') }}">WatooShop</a>
+{#                    <img class="h-8 md:h-10" src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/OpenCart_icon.svg/550px-OpenCart_icon.svg.png" alt="" />#}
+                </div>
+
+                <div class="group inline-block">
+                    <a href="{{ path("category")}}" class="dropbtn bg-blue-600 hover:bg-blue-700 font-bold uppercase text-blue-600 px-4 xl:px-6 py-2 xl:py-3 rounded flex-shrink-0 flex items-center">
+                        <span class="pr-1 font-semibold flex-1 text-white">Catégories</span>
+                        <span>
+                            <svg class="fill-current h-4 w-4 transform group-hover:-rotate-180 transition duration-150 ease-in-out text-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/>
+                            </svg>
+                        </span>
+                    </a>
+                    <ul role="list" class="bg-white border rounded-sm transform scale-0 group-hover:scale-100 absolute transition duration-150 ease-in-out origin-top min-w-32">
+
+                        <li class="lg:hidden rounded-sm relative px-3 py-1 hover:bg-gray-100">
+                            <span class="truncate max-w-24"><a href="{{ path('best_sellers') }}">Meilleures ventes</a></span>
+                        </li>
+                        <li class="lg:hidden rounded-sm relative px-3 py-1 hover:bg-gray-100">
+                            <span class="truncate max-w-24"><a href="{{ path('best_price') }}">Meilleurs prix</a></span>
+                        </li>
+                        <li class="lg:hidden rounded-sm relative px-3 py-1 hover:bg-gray-100">
+                            <span class="truncate max-w-24"><a href="{{ path('best_quality') }}">Meilleures qualités</a></span>
+                        </li>
+                        <li class="lg:hidden rounded-sm relative px-3 py-1 hover:bg-gray-100">
+                            <span class="truncate max-w-24"><a href="{{ path('price_quality') }}">Meilleurs qualité/prix</a></span>
+                        </li>
+                        <li class="lg:hidden rounded-sm relative px-3 py-1 hover:bg-gray-100">
+                            <span class="truncate max-w-24"><a href="{{ path('app_faq') }}">FAQ</a></span>
+                        </li>
+
+
+                        {% for category in app.session.get('categories') %}
+                            <li tabindex="{{ loop.index }}" class="rounded-sm relative px-3 py-1 hover:bg-gray-100">
+                                <button class="w-full text-left flex items-center outline-none focus:outline-none">
+                                    <span class="pr-1 flex-1">{{ category.title }}</span>
+                                    <span class="mr-auto">
+                                        <svg class="fill-current h-4 w-4 transition duration-150 ease-in-out" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                            <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/>
+                                        </svg>
+                                    </span>
+                                </button>
+                                <ul role="list" class="bg-white border rounded-sm absolute top-0 right-0 transition duration-150 ease-in-out origin-top-left min-w-32">
+                                    {% for subCategory in category.subCategories %}
+                                        <li class="px-3 py-1 hover:bg-gray-100">
+                                            <a href="{{ path('subcat', {pathCategory: subCategory.category.pathCategory,pathSubCategory : subCategory.pathSubCategory}) }}" class="flex items-center p-3 text-sm text-gray-600 capitalize transition-colors duration-300 transform dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-white">
+                                                <span class="mx-1">{{ subCategory.title }}</span>
+                                            </a>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+
+                <!-- menu -->
+                <nav class="hidden lg:contents ml-8">
+                    <ul class="flex items-center text-sm font-bold">
+                        <li class="px-2 lg:px-3 flex items-center text-slate-600 hover:text-blue-600">
+                            <span class="truncate max-w-24"><a href="{{ path('best_sellers') }}">Meilleures ventes</a></span>
+                        </li>
+                        <li class="px-2 lg:px-3 flex items-center text-slate-600 hover:text-blue-600">
+                            <span class="truncate max-w-24"><a href="{{ path('best_price') }}">Meilleurs prix</a></span>
+                        </li>
+                        <li class="px-2 lg:px-3 flex items-center text-slate-600 hover:text-blue-600">
+                            <span class="truncate max-w-24"><a href="{{ path('best_quality') }}">Meilleures qualités</a></span>
+                        </li>
+                        <li class="px-2 lg:px-3 flex items-center text-slate-600 hover:text-blue-600">
+                            <span class="truncate max-w-24"><a href="{{ path('price_quality') }}">Meilleurs qualité/prix</a></span>
+                        </li>
+                        <li class="px-2 lg:px-3 flex items-center text-blue-600 hover:text-slate-600">
+                            <span class="truncate max-w-24"><a href="{{ path('app_faq') }}">FAQ</a></span>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </header>
+
+        <!-- body -->
+        <main class="bg-slate-50">
+            {% block body %}
+            {% endblock %}
+        </main>
+
+        <footer class="text-gray-600 body-font bg-slate-50">
+            <div class="container px-5 mx-auto"></div>
+            <div class="bg-blue-100">
+                <div class="container px-5 py-6 mx-auto flex items-center sm:flex-row flex-col">
+                    <a class="flex title-font font-medium items-center md:justify-start justify-center text-gray-900">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-10 h-10 text-white p-2 bg-blue-500 rounded-full" viewBox="0 0 24 24">
+                            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
+                        </svg>
+                        <span class="ml-3 text-xl">WATOOSHOP</span>
+                    </a>
+                    <p class="text-sm text-gray-500 sm:ml-6 sm:mt-0 mt-4">© 2022 WatooShop </p>
+                    <span class="inline-flex sm:ml-auto sm:mt-0 mt-4 justify-center sm:justify-start">
+                        <a class="text-blue-500">
+                          <svg fill="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-5 h-5" viewBox="0 0 24 24">
+                            <path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"></path>
+                          </svg>
+                        </a>
+                        <a class="ml-3 text-blue-500">
+                          <svg fill="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-5 h-5" viewBox="0 0 24 24">
+                            <path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z"></path>
+                          </svg>
+                        </a>
+                        <a class="ml-3 text-blue-500">
+                          <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-5 h-5" viewBox="0 0 24 24">
+                            <rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect>
+                            <path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37zm1.5-4.87h.01"></path>
+                          </svg>
+                        </a>
+                        <a class="ml-3 text-blue-500">
+                          <svg fill="currentColor" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="0" class="w-5 h-5" viewBox="0 0 24 24">
+                            <path stroke="none" d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"></path>
+                            <circle cx="4" cy="4" r="2" stroke="none"></circle>
+                          </svg>
+                        </a>
+                    </span>
+                </div>
+            </div>
+        </footer>
+    </body>
+</html>
